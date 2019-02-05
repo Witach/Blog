@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-
+{% load staticfiles %}
 <html>
     <head>
         <title>Blog Project</title>
@@ -15,7 +15,7 @@
 
 
         {# Custom CSS#}
-        <link rel="stylesheet" href="">
+        <link rel="stylesheet" href="{% static 'style.css' %}">
 
         {# Fonts#}
         <link href="https://fonts.googleapis.com/css?family=Montserrat|Russo+One" rel="stylesheet">
@@ -79,7 +79,7 @@
 
 {# SCRIPTS#}
 
-<script type="text/javascript" src=""></script>
+<script type="text/javascript" src="{% static 'functions.js' %}"></script>
 
 </body>
 </html>
