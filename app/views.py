@@ -33,3 +33,10 @@ class PostDeleteView(LoginRequiredMixin,DeleteView):
     model = Post
     login_url='/login/'
     succes_url="post_list"
+
+class PostDraftListView(LoginRequiredMixin,ListView):
+    model = Post
+    login_url='/login/'
+
+    def get_queryset(self):
+        return Post.objects.filter(published_date__isnull=True).order_by("-date_created")
