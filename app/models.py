@@ -1,5 +1,6 @@
 from django.utils import timezone
 from django.db import models
+from django.urls import reverse
 # Create your models here.
 
 class Post(models.Model):
@@ -9,8 +10,32 @@ class Post(models.Model):
     date_created = models.DateField(default=timezone.now)
     date_published = models.DateField(blank=True,null=True)
 
+    def publish(self):
+        self.publish_date = timezone.now()
+        self.save()
+
+    def approved_comments(self):
+        return self.comments.filter(approved_comment=True)
+
+    def get_absolute_url(self):
+        return reverse("post_detail",kwargs={'pk':self.pk})
+
+    def __str__(self):
+        return self.title
+
+
 class Comments(models.Model):
     post = models.ForeignKey('Post',related_name='comments')
     author = models.CharField(max_length=264)
     text = models.TextField()
     data_published = models.DateField()
+
+    def approve(self):
+        self.approved_comment = True
+        self.save()
+
+    def get_absolute_url(self):
+        return reverse("post_list")
+
+    def __str__(self):
+        return self.text
