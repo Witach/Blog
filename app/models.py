@@ -11,7 +11,7 @@ class Post(models.Model):
     date_published = models.DateField(blank=True,null=True)
 
     def publish(self):
-        self.publish_date = timezone.now()
+        self.date_published = timezone.now()
         self.save()
 
     def approved_comments(self):
@@ -28,7 +28,8 @@ class Comments(models.Model):
     post = models.ForeignKey('Post',related_name='comments')
     author = models.CharField(max_length=264)
     text = models.TextField()
-    data_published = models.DateField()
+    created_date = models.DateField(default=timezone.now())
+    approved_comment = models.BooleanField(default=False)
 
     def approve(self):
         self.approved_comment = True

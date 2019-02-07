@@ -6,6 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView,ListView,DetailView,CreateView,UpdateView,DeleteView
 from django.contrib.auth.decorators import login_required
 from app.form import PostForm,CommentForm
+from app.models import Comments,Post
 # Create your views here.
 class startView(TemplateView):
     template_name = 'about.html'
@@ -14,12 +15,12 @@ class PostListView(ListView):
     model = Post
 
     def get_queryset(self):
-        return Post.objects.filter(published_date__lte=timezone.now()).order_by("-published_date")
+        return Post.objects.filter(date_published__lte=timezone.now()).order_by("-date_published")
 
 class PostDetailView(DetailView):
     model = Post
 
-class PoostCreateView(LoginRequiredMixin,CreateView):
+class PostCreateView(LoginRequiredMixin,CreateView):
     model = Post
     login_url='/login/'
     redirect_field_name = "post_detail.html"
@@ -33,15 +34,14 @@ class PostUpdateView(LoginRequiredMixin,UpdateView):
 
 class PostDeleteView(LoginRequiredMixin,DeleteView):
     model = Post
-    login_url='/login/'
-    succes_url="post_list"
+    success_url=reverse_lazy("post_list")
 
 class PostDraftListView(LoginRequiredMixin,ListView):
     model = Post
     login_url='/login/'
 
     def get_queryset(self):
-        return Post.objects.filter(published_date__isnull=True).order_by("-date_created")
+        return Post.objects.filter(date_published__isnull=True).order_by("-date_created")
 
 @login_required
 def post_publish(request,pk):
@@ -65,13 +65,13 @@ def add_comment_to_post(request,pk):
 
 @login_required
 def comment_approve(request,pk):
-    comment =get_object_or_404(Comment, pk=pk)
+    comment =get_object_or_404(Comments, pk=pk)
     comment.approve()
     return redirect('post_detail', pk=comment.post.pk)
 
 @login_required
 def comment_remove(request,pk):
-    comment = get_object_or_404(Comment, pk=pk)
+    comment = get_object_or_404(Comments, pk=pk)
     post_pk = comment.post.pk
     comment.delete()
     return redirect('post_detail',pk=post_pk)
