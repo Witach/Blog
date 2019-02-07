@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView,ListView,DetailView,CreateView,UpdateView,DeleteView
 from django.contrib.auth.decorators import login_required
-from app.forms import PostForm,CommentForm
+from app.form import PostForm,CommentForm
 # Create your views here.
 class startView(TemplateView):
     template_name = 'about.html'
